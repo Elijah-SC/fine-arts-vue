@@ -6,6 +6,7 @@ export class Artwork {
     this.color = data.color
     this.admirers = []
     this.fullImg = data.imgUrls.full
+    this.regularImg = data.imgUrls.regular
   }
 }
 
