@@ -7,10 +7,19 @@ import { AppState } from "./AppState.js";
 onMounted(() => { getArt() })
 
 const artworks = computed(() => AppState.artworks)
+const currentPage = computed(() => AppState.currentPage)
+const totalPages = computed(() => AppState.totalPages)
 
 async function getArt() {
   try {
     await artService.getArt()
+  } catch (error) {
+    Pop.meow(error)
+  }
+}
+async function changePage(pageNumber) {
+  try {
+    await artService.changePage(pageNumber)
   } catch (error) {
     Pop.meow(error)
   }
@@ -25,18 +34,22 @@ async function getArt() {
     </header>
     <main class="container-fluid">
       <section class="row">
-        <div class="col-2">
-          <div class="pageSelection">
-            <p class="text-center mb-0">pager 1 / 10</p>
-            <button class="w-100 btn btn-outline-dark my-1">Previous</button>
-            <button class="w-100 btn btn-outline-dark my-1">Next</button>
+        <div class="col-sm-2 divider d-flex align-items-end justify-content-center">
+          <div class="sticky-sm-bottom">
+            <p class="mb-0 text-center"><i class="mdi mdi-book-open fs-1"></i></p>
+            <p class="text-center mb-0">pages
+              {{ currentPage }} / {{ totalPages }}</p>
+            <button @click="changePage(currentPage - 1)" class="w-100 btn btn-outline-dark my-1"
+              :disabled="currentPage < 2">Previous</button>
+            <button @click="changePage(currentPage + 1)" class=" w-100 btn btn-outline-dark my-1"
+              :disabled="currentPage == totalPages">Next</button>
           </div>
         </div>
-        <div class="col-10">
-          <div class="row justify-content-between">
-            <h1>Codeworks Institute of Fine Art</h1>
-            <div class="col-3 g-0" v-for="artwork in artworks" :key="artwork.id">
-              <div class="imgBox">
+        <div class="col-sm-10">
+          <h1>Codeworks Institute of Fine Art</h1>
+          <div class="masonry-container">
+            <div class="" v-for="artwork in artworks" :key="artwork.id">
+              <div class="imgBox mb-4">
                 <img :src="artwork.smallImg" alt="" class="img-fluid">
               </div>
             </div>
@@ -55,11 +68,16 @@ body {
 }
 
 .imgBox {
-  margin: .25em;
   box-shadow: 2px 2px 5px black;
 }
 
-.pageSelection {
-  margin-top: 80vh;
+.pageSelection {}
+
+.divider {
+  border-right: 2px solid black;
+}
+
+.masonry-container {
+  columns: 4;
 }
 </style>
