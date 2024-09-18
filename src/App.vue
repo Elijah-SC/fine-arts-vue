@@ -37,8 +37,10 @@ async function changePage(pageNumber) {
         <div class="col-sm-2 divider d-flex align-items-end justify-content-center">
           <div class="sticky-sm-bottom">
             <p class="mb-0 text-center"><i class="mdi mdi-book-open fs-1"></i></p>
-            <p class="text-center mb-0">pages
-              {{ currentPage }} / {{ totalPages }}</p>
+            <div class="text-center mb-0 d-flex justify-content-center">
+              pages <form><input class="inputNumber" type="number" :placeholder="currentPage.toString()"></form> /
+              {{ totalPages }}
+            </div>
             <button @click="changePage(currentPage - 1)" class="w-100 btn btn-outline-dark my-1"
               :disabled="currentPage < 2">Previous</button>
             <button @click="changePage(currentPage + 1)" class=" w-100 btn btn-outline-dark my-1"
@@ -79,5 +81,17 @@ body {
 
 .masonry-container {
   columns: 4;
+}
+
+.inputNumber {
+  height: 25px;
+  width: 40px;
+  border: none;
+  box-shadow: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }
 </style>
