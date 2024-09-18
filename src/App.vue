@@ -1,7 +1,7 @@
 <script setup>
 import Pop from "./utils/Pop.js";
 import { artService } from "./services/ArtService.js";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { AppState } from "./AppState.js";
 
 onMounted(() => { getArt() })
@@ -9,6 +9,8 @@ onMounted(() => { getArt() })
 const artworks = computed(() => AppState.artworks)
 const currentPage = computed(() => AppState.currentPage)
 const totalPages = computed(() => AppState.totalPages)
+
+const pageSelectorInput = ref(0)
 
 async function getArt() {
   try {
@@ -38,8 +40,12 @@ async function changePage(pageNumber) {
           <div class="sticky-sm-bottom">
             <p class="mb-0 text-center"><i class="mdi mdi-book-open fs-1"></i></p>
             <div class="text-center mb-0 d-flex justify-content-center">
-              pages <form><input class="inputNumber" type="number" :placeholder="currentPage.toString()"></form> /
-              {{ totalPages }}
+              pages
+              <form @submit.prevent="changePage(pageSelectorInput)">
+                <input v-model="pageSelectorInput" class="inputNumber text-center" type="number"
+                  :placeholder="currentPage.toString()" minlength="1" :maxlength="totalPages">
+              </form>
+              / {{ totalPages }}
             </div>
             <button @click="changePage(currentPage - 1)" class="w-100 btn btn-outline-dark my-1"
               :disabled="currentPage < 2">Previous</button>
@@ -73,8 +79,6 @@ body {
   box-shadow: 2px 2px 5px black;
 }
 
-.pageSelection {}
-
 .divider {
   border-right: 2px solid black;
 }
@@ -85,9 +89,10 @@ body {
 
 .inputNumber {
   height: 25px;
-  width: 40px;
+  width: 3em;
   border: none;
   box-shadow: none;
+  margin-left: 1em;
 }
 
 input::-webkit-outer-spin-button,
