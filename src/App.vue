@@ -10,7 +10,9 @@ const artworks = computed(() => AppState.artworks)
 const currentPage = computed(() => AppState.currentPage)
 const totalPages = computed(() => AppState.totalPages)
 
-const pageSelectorInput = ref(0)
+const pageSelectorInput = ref({
+  input: ``
+})
 
 async function getArt() {
   try {
@@ -21,7 +23,12 @@ async function getArt() {
 }
 async function changePage(pageNumber) {
   try {
+    if (pageNumber < 1) return
+    if (pageNumber > totalPages.value) return
     await artService.changePage(pageNumber)
+    pageSelectorInput.value = {
+      input: currentPage.value.toString()
+    }
   } catch (error) {
     Pop.meow(error)
   }
